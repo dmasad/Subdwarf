@@ -190,5 +190,7 @@ bankHeist = {
 }
 
 let model = new subdwarf.EventModel(bankHeist);
-for (let i=0; i<10; i++) model.step();
-console.log(model.eventLog);
+model.runAll(render=true);
+//while(!model.end) model.step();
+//let narrative = model.renderNarrative();
+///for (let i in narrative) console.log(narrative[i]);

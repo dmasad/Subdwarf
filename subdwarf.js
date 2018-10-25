@@ -34,16 +34,19 @@ class EventModel {
     if (eventRules.hasOwnProperty("starting state"))
       this.startingState = eventRules["starting state"];
     if (startingState !== null) this.startingState = startingState;
-    this.currentState = Object.assign({}, this.startingState);
-
     this.stability = stability;
     if (eventRules.hasOwnProperty("stability")) this.stability = eventRules["stability"];
-    
+    this.reset();
+  }
+
+  reset() {
+    this.currentState = Object.assign({}, this.startingState);    
     this.eventLog = [];
     this.narrative = [];
     this.stateHistory = [];
     this.steps = 0;
     this.end = false;
+
   }
 
   filterEvents() {
@@ -58,6 +61,10 @@ class EventModel {
     if (this.end) return;
 
     let possibleEvents = this.filterEvents();
+    if (possibleEvents.length === 0) {
+      this.end = true;
+      return;
+    }
 
     // Get event weights
     let eventWeights = {};
@@ -78,6 +85,17 @@ class EventModel {
     this.eventLog.push(event.name);
     this.stateHistory.push(Object.assign({}, this.currentState));
     this.steps++;
+  }
+
+  runAll(render=false, reset=true, maxSteps=50) {
+    if (reset) this.reset();
+    while (!this.end && this.steps < maxSteps) {
+      this.step();
+      if (render) {
+        for (let i in this.narrative)
+          if (this.narrative[i][0] === this.steps-1) console.log(this.narrative[i][1]);
+      }
+    }
   }
 
   addToNarrative(text) {
