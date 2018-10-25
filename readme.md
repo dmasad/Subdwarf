@@ -39,10 +39,10 @@ Event rulesets are defined as JavaScript objects, with the following structure:
 
 ```javascript
 let myRuleSet = {
-	"events": [
-		// A list of events:
-		{
-			"name": "An event name",
+  "events": [
+    // A list of events:
+    {
+      "name": "An event name",
       "when": function(state) { /* check whether the event can happen from this state */ },
       "weight": 1, // A relative probability that this event will happen
       "effects": function(state) {
@@ -51,15 +51,15 @@ let myRuleSet = {
         state["new tag"] = ["first value"];
         this.addToNarrative("Some text to add to the narrative");
       }
-		},
-		...
-	],
-	"starting_state": 
-		// Optional initial state object; defaults to {}
-		{
-			"some tag": "initial value",
-			"another tag": ["a label"]
-		}
+    },
+    //...
+  ],
+  "starting_state": 
+    // Optional initial state object; defaults to {}
+    {
+      "some tag": "initial value",
+      "another tag": ["a label"]
+    }
 }
 ``` 
 
@@ -73,8 +73,8 @@ For example, an early state of a colony might be:
 
 ```javascript
 {
-	"settlements": ["First landing site"],
-	"government": "Unified"
+  "settlements": ["First landing site"],
+  "government": "Unified"
 }
 ```
 
@@ -82,11 +82,11 @@ A later state might be:
 
 ```javascript
 {
-	"settlements": ["Capital city", "Many cities", "Factory farms"],
-	"government": "City states",
-	"international relations": "Simmering tensions",
-	"economy": "Stagnant",
-	"university": ["Biotech research", "Student radicals"]
+  "settlements": ["Capital city", "Many cities", "Factory farms"],
+  "government": "City states",
+  "international relations": "Simmering tensions",
+  "economy": "Stagnant",
+  "university": ["Biotech research", "Student radicals"]
 }
 ```
 ## Events
@@ -97,9 +97,9 @@ Here's the simplest possible event:
 
 ```javascript
 {
-	"name": "Asteroid impact",
-	"when": function(state) { return true;},
-	"effects": function(state) {
+  "name": "Asteroid impact",
+  "when": function(state) { return true;},
+  "effects": function(state) {
     this.addToNarrative("An asteroid hits the planet surface, leaving a crater.")
     state["craters"] = "Asteroid crater";
   }
@@ -119,7 +119,8 @@ Then `"Asteroid impact"` occurs.
 
 ```.json
 {
-	"craters": "Asteroid crater"
+  "craters": "Asteroid crater"
 }
 ```
+
 **IN PROGRESS**
