@@ -9,7 +9,8 @@ class EventModel {
       this.startingState = eventRules["starting state"];
     if (startingState !== null) this.startingState = startingState;
     this.stability = stability;
-    if (eventRules.hasOwnProperty("stability")) this.stability = eventRules["stability"];
+    if (eventRules.hasOwnProperty("stability")) 
+      this.stability = eventRules["stability"];
     this.reset();
   }
 
@@ -24,17 +25,9 @@ class EventModel {
   }
 
   event(name) {
-    for (let event in this.events)
-      if (event.name === name) return event;
+    for (let i in this.events)
+      if (this.events[i].name === name) return this.events[i];
     throw "No event with the name " + name;
-  }
-
-  filterEvents() {
-    let nextEvents = [];
-    for (let event of this.events) {
-      if (event.when(this.currentState)) nextEvents.push(event);
-    }
-    return nextEvents;
   }
 
   getNextEvents(state=null) {
@@ -53,33 +46,22 @@ class EventModel {
       }
     }
 
-    possibleEvents = weightsToProbabilities(possibleEvents, true, this.stability);
+    possibleEvents = weightsToProbabilities(possibleEvents, true, 
+                                            this.stability);
     return possibleEvents;
   }
 
-  step() {
+  step(debug=false) {
     if (this.end) return;
 
-    let possibleEvents = this.filterEvents();
-    if (possibleEvents.length === 0) {
-      this.end = true;
-      return;
+    let possibleEvents = this.getNextEvents();
+
+    if (debug) {
+      console.log("Possible next events:");
+      console.log(possibleEvents);
     }
 
-    // Get event weights
-    let eventWeights = {};
-    for (let i in possibleEvents) {
-      let event = possibleEvents[i];
-      let weight = 0;
-      if (event.hasOwnProperty("weight")) {
-        if (typeof event["weight"] === "number") weight = event["weight"];
-        if (typeof event["weight"] === "function") 
-          weight = event["weight"](this.currentState);
-      }
-      eventWeights[i] = weight;
-    }
-    
-    let event = possibleEvents[weightedChoice(eventWeights)];
+    let event = this.event(weightedChoice(possibleEvents));
     let eventEffects = event.effects.bind(this);
     eventEffects(this.currentState);
     

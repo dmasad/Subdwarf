@@ -23,7 +23,7 @@ bankHeist = {
       "name": "guns come out",
       "when": function(state) {return state["crew"] === "inside"},
       "effects": function(state) {
-        this.addToNarrative(" 'This is a robbery!' they shout, pulling out guns");
+        this.addToNarrative("'This is a robbery!' they shout, pulling out guns");
         state["robbery"] = "in progress";
       }
     },
@@ -191,6 +191,3 @@ bankHeist = {
 
 let model = new subdwarf.EventModel(bankHeist);
 model.runAll(render=true);
-//while(!model.end) model.step();
-//let narrative = model.renderNarrative();
-///for (let i in narrative) console.log(narrative[i]);
