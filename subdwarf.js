@@ -54,6 +54,11 @@ class EventModel {
   step(debug=false) {
     if (this.end) return;
 
+    if (debug) {
+      console.log("Step " + this.steps);
+      console.log(this.currentState);
+    }
+
     let possibleEvents = this.getNextEvents();
 
     if (debug) {
@@ -64,22 +69,25 @@ class EventModel {
     let event = this.event(weightedChoice(possibleEvents));
     let eventEffects = event.effects.bind(this);
     eventEffects(this.currentState);
+
+    if (debug) console.log("Chosen event: " + event.name + "\n");
     
     this.eventLog.push(event.name);
     this.stateHistory.push(Object.assign({}, this.currentState));
     this.steps++;
   }
 
-  runAll(render=false, reset=true, maxSteps=50) {
+  runAll(render=false, reset=true, maxSteps=50, debug=false) {
     if (reset) this.reset();
     while (!this.end && this.steps < maxSteps) {
-      this.step();
+      this.step(debug);
       if (render) {
         for (let i in this.narrative) {
           if (this.narrative[i][0] === this.steps-1) 
             console.log(this.narrative[i][1]);
         }
       }
+      if (debug) console.log("\n");
     }
   }
 
