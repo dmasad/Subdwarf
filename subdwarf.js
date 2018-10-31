@@ -11,6 +11,7 @@ class EventModel {
     this.stability = stability;
     if (eventRules.hasOwnProperty("stability")) 
       this.stability = eventRules["stability"];
+    this.debugMode = false;
     this.reset();
   }
 
@@ -60,10 +61,15 @@ class EventModel {
     }
 
     let possibleEvents = this.getNextEvents();
-
+    
     if (debug) {
       console.log("Possible next events:");
       console.log(possibleEvents);
+    }
+
+    if (Object.keys(possibleEvents).length === 0) {
+      this.end = true;
+      return;
     }
 
     let event = this.event(weightedChoice(possibleEvents));
@@ -77,17 +83,17 @@ class EventModel {
     this.steps++;
   }
 
-  runAll(render=false, reset=true, maxSteps=50, debug=false) {
+  runAll(render=true, reset=true, maxSteps=50) {
     if (reset) this.reset();
     while (!this.end && this.steps < maxSteps) {
-      this.step(debug);
+      this.step(this.debugMode);
       if (render) {
         for (let i in this.narrative) {
           if (this.narrative[i][0] === this.steps-1) 
             console.log(this.narrative[i][1]);
         }
       }
-      if (debug) console.log("\n");
+      if (this.debugMode) console.log("\n");
     }
   }
 
