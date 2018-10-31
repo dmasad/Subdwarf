@@ -1,6 +1,6 @@
 # Subdwarf
 
-Subdwarf is a generative system in JavaScript, intended to generate random, plausible sequences of events based on an event ruleset. Events modify the world state, which in turn determines which events might happen next. (Subdwarf is a very approximate reimplementation of my work-in-progress [MainSequence system](https://github.com/dmasad/MainSequence); a subdwarf is smaller than a main-sequence star).
+Subdwarf is a generative system in JavaScript, intended to generate random but self-consistent sequences of events based on an event ruleset. Events modify the world state, which in turn determines which events might happen next. (Subdwarf is a very approximate reimplementation of my work-in-progress [MainSequence system](https://github.com/dmasad/MainSequence); a subdwarf is smaller than a main-sequence star).
 
 Like MainSequence, Subdwarf is influenced by [Tracery](https://github.com/galaxykate/tracery), [Improv](https://github.com/sequitur/improv), and [cross-imact analysis](https://en.wikipedia.org/wiki/Cross_impact_analysis). The actual JavaScript implementation is *heavily* indebted to Allison Parrish's [seaduck](https://github.com/aparrish/seaduck).
 
@@ -246,14 +246,3 @@ Where `Wj` are the weights of all other possible events. (`stability` is a param
 If all weights are the same, that means all events have the same probability of being chosen. Raising a weight by 1 roughly doubles the probability; reducing by one roughly halves it. 
 
 Why are we exponentiating, instead of just summing the weights themselves? Two reasons: **(1)** This lets us use negative weights, so we can reduce weights below 0 without anything breaking, and **(2)** adds in the `stability` parameter, which allows us to make unlikely events increasingly possible.
-
-To directly assign a weight to an event, explicitly give it a `"weight"` property. For example, an unlikely earthquake that could happen at any time might be:
-
-```.json
-{
-	"name": "Earthquake",
-	"preconditions": {},
-	"weight": -2,
-	"effects": {"really bad stuff": "true"}
-}
-```
