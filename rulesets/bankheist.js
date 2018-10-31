@@ -35,7 +35,8 @@ bankHeist = {
         else return -2;
       },
       "effects": function(state) {
-          let text = ["The crowd freaks out", "The crowd starts to panic"]
+          let text = ["The crowd inside the bank starts to panic.", 
+                      "People in the crowd start to get agitated."]
           this.addToNarrative(subdwarf.choice(text));
           state["crowd"] = "panic";
       }
@@ -51,7 +52,7 @@ bankHeist = {
           return w; 
       },
       "effects": function(state) {
-        this.addToNarrative("A customer tries to fight back!");
+        this.addToNarrative("Suddenly, one of the customers decides to try to be a hero, and tackles a robber.");
         state["fight"] = "unarmed";
       }
     },
@@ -65,7 +66,7 @@ bankHeist = {
           return w;
       },
       "effects": function(state) {
-        this.addToNarrative("A guard pulls out his gun and decides to be a hero.");
+        this.addToNarrative("A guard takes advantage of a moment of distraction and pulls out his sidearm.");
         state["fight"] = "guard";
       }
     },
@@ -81,8 +82,10 @@ bankHeist = {
           return w;
       },
       "effects": function(state) {
-          let text = ["A robber shoots one of the customers",
-                      "A robber shoots one of the guards!"]
+
+          let victim = subdwarf.choice(["one of the customers",
+                      "a guard"]);
+          let text = "In the chaos, a robber fires his gun and shoots " + victim;
           this.addToNarrative(subdwarf.choice(text));
           state["fight"] = "over";
           state["crowd"] = "cowed"
@@ -98,7 +101,7 @@ bankHeist = {
       "name": "teller hands over the money",
       "when": function(state) {return state["robbery"] === "in progress"},
       "effects": function(state) {
-        this.addToNarrative("The teller hands over the money.");
+        this.addToNarrative("The teller puts all the money into a bag and hands it over.");
         state["robbery"] = "escape";
       }
     },
@@ -182,7 +185,7 @@ bankHeist = {
         return (state["crew"] === "inside" & state["getaway car"] === "outside")},
       "weight": 0,
       "effects": function(state) {
-        this.addToNarrative("The getaway car pulls away");
+        this.addToNarrative("The getaway car pulls away.");
         state["getaway car"] = "gone";
       }
     },

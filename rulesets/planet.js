@@ -14,6 +14,9 @@ planetModel = {
 
   "events" :[
     {
+      // New colony events
+      // ---------------------------------------------------------------
+
       "name": "settlers arrive",
       "when": function(state) {return state["type"] === "unsettled";},
       "effects": function(state) {
@@ -79,7 +82,7 @@ planetModel = {
           "alien artifacts": 0.1
         }
         let discovery = subdwarf.weightedChoice(possibleDiscoveries, false);
-        let txt = "An expedition sets out to explore the planet and discovers";
+        let txt = "An expedition sets out to explore the planet and discovers ";
         txt += discovery + ".";
         this.addToNarrative(txt);
         if (discovery !== "nothing") 
@@ -176,6 +179,31 @@ planetModel = {
         this.end = true; // TODO: This isn't true.
       },
     },
+    // Flourishing colony events
+    // ---------------------------------------------------------------
+    {
+      "name": "population stabilizes",
+      "when": function(state) { return state["population"] === "growing" },
+      "weight": -2,
+      "effects": function(state) {
+        this.addToNarrative("The population of the colony begins to stabilize.");
+        state["population"] = "stable";
+      },
+    },
+    {
+      "name": "town grows into city",
+      "when": function(state) {
+        return (state["settlements"] === "town" && 
+                state["type"] === "flourishing colony") },
+      "weight": -2,
+      "effects": function(state) {
+        this.addToNarrative("Once a small base camp, the main town grows into a decent-sized city.");
+        state["settlements"] = "city";
+      }
+    },
+
+    // Factional conflict events
+    // ---------------------------------------------------------------
     {
       "name": "new faction emerges",
       "when": function(state) { return state["government"] === "unified"; },
@@ -198,7 +226,7 @@ planetModel = {
       },
       "weight": -2,
       "effects": function(state) {
-        let faction = subdwarf.choice(factionTypes);
+        let faction = subdwarf.choice(state["factions"]);
         if (state["ruling faction"] === faction ) {
           // Government crackdown
             this.addToNarrative("The " + faction + " tighten their grip on power"); 
@@ -225,5 +253,5 @@ planetModel = {
 }
 
 let model = new subdwarf.EventModel(planetModel);
-//model.runAll(true, true, 10, true);
+model.debugMode = false;
 model.runAll(true, true, 20, false);
